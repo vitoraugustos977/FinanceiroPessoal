@@ -1,0 +1,114 @@
+<div class="page-container">
+  <h1 class="page-title">Opções</h1>
+
+  <!-- Saldo Inicial -->
+  <div class="card settings-card">
+    <div class="settings-section-header">
+      <mat-icon class="section-icon">account_balance</mat-icon>
+      <div>
+        <h2 class="section-title">Saldo Inicial</h2>
+        <p class="section-desc">
+          Valor de ponto de partida antes do primeiro lançamento registrado.
+          Esse valor é somado ao seu saldo total no dashboard.
+        </p>
+      </div>
+    </div>
+
+    <form [formGroup]="balanceForm" (ngSubmit)="saveInitialBalance()">
+      <mat-form-field appearance="outline" class="balance-field">
+        <mat-label>Saldo Inicial (R$)</mat-label>
+        <input
+          matInput
+          type="number"
+          step="0.01"
+          min="0"
+          formControlName="initialBalance"
+          placeholder="0,00"
+        />
+        <mat-icon matSuffix>account_balance_wallet</mat-icon>
+        @if (balanceForm.get('initialBalance')?.hasError('min')) {
+          <mat-error>O saldo inicial não pode ser negativo</mat-error>
+        }
+      </mat-form-field>
+
+      @if (hasTransactions()) {
+        <p class="locked-message">
+          <mat-icon class="lock-icon">lock</mat-icon>
+          O saldo inicial está bloqueado pois existem lançamentos cadastrados.
+          Para editá-lo, exclua todos os lançamentos primeiro.
+        </p>
+      }
+
+      <div class="form-actions">
+        <button
+          mat-flat-button
+          color="primary"
+          type="submit"
+          [disabled]="balanceForm.invalid || hasTransactions()"
+        >
+          <mat-icon>save</mat-icon>
+          Salvar Saldo Inicial
+        </button>
+      </div>
+    </form>
+  </div>
+
+  <!-- Dados de Exemplo -->
+  <div class="card settings-card">
+    <div class="settings-section-header">
+      <mat-icon class="section-icon">science</mat-icon>
+      <div>
+        <h2 class="section-title">Dados de Exemplo</h2>
+        <p class="section-desc">
+          Gera ~55 lançamentos realistas de Janeiro a Março de 2026 para explorar o app.
+          Se não houver objetivos cadastrados, 3 objetivos de exemplo serão criados.
+        </p>
+      </div>
+    </div>
+
+    <mat-divider class="divider" />
+
+    <div class="danger-action">
+      <div class="danger-action-info">
+        <strong>Gerar lançamentos de Jan–Mar 2026</strong>
+        <p>Adiciona receitas, despesas e aportes em objetivos com dados fictícios. Não remove dados existentes.</p>
+      </div>
+      <button mat-stroked-button color="primary" (click)="confirmSeedData()">
+        <mat-icon>auto_awesome</mat-icon>
+        Gerar Dados
+      </button>
+    </div>
+  </div>
+
+  <!-- Zona de Perigo -->
+  <div class="card settings-card danger-card">
+    <div class="settings-section-header">
+      <mat-icon class="section-icon danger-icon">warning</mat-icon>
+      <div>
+        <h2 class="section-title">Zona de Perigo</h2>
+        <p class="section-desc">
+          Ações irreversíveis. Utilize com cuidado.
+        </p>
+      </div>
+    </div>
+
+    <mat-divider class="divider" />
+
+    <div class="danger-action">
+      <div class="danger-action-info">
+        <strong>Excluir todos os lançamentos</strong>
+        <p>Remove permanentemente todos os lançamentos do histórico. As categorias não serão afetadas.</p>
+      </div>
+      <button
+        mat-stroked-button
+        color="warn"
+        [disabled]="!hasTransactions()"
+        (click)="confirmDeleteAll()"
+        [matTooltip]="!hasTransactions() ? 'Nenhum lançamento para excluir' : ''"
+      >
+        <mat-icon>delete_sweep</mat-icon>
+        Excluir Todos
+      </button>
+    </div>
+  </div>
+</div>

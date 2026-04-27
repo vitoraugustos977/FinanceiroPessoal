@@ -1,0 +1,61 @@
+@use '@angular/material' as mat;
+
+html {
+  height: 100%;
+  @include mat.theme(
+    (
+      color: (
+        primary: mat.$green-palette,
+        tertiary: mat.$red-palette,
+      ),
+      typography: Roboto,
+      density: 0,
+    )
+  );
+  // Aplica os tokens exatos da paleta
+  --mat-sys-primary: #4A4820;
+  --mat-sys-on-primary: #ffffff;
+  --mat-sys-primary-container: #DDDDB8;
+  --mat-sys-on-primary-container: #1C1B00;
+  --mat-sys-secondary: #8B8B4A;
+  --mat-sys-on-secondary: #ffffff;
+}
+
+body {
+  color-scheme: light;
+  background-color: #F5F2E7;
+  color: var(--mat-sys-on-surface);
+  font: var(--mat-sys-body-medium);
+  margin: 0;
+  height: 100%;
+}
+
+.page-container {
+  padding: 24px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.page-title {
+  font-size: 24px;
+  font-weight: 500;
+  margin: 0 0 24px;
+  color: #4A4820;
+}
+
+.card {
+  background: white;
+  border-radius: 12px;
+  padding: 20px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+.text-success { color: #6B6B35; }
+.text-danger  { color: #A31C2A; }
+.text-muted   { color: #757575; font-size: 14px; }
+
+.chip-receita  { background: #EAEADB; color: #6B6B35; }
+.chip-despesa  { background: #F5E2E4; color: #A31C2A; }
+.chip-objetivo { background: #E8E6D8; color: #4A4820; }
+
+.text-objetivo { color: #4A4820; }

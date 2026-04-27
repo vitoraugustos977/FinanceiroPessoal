@@ -1,0 +1,98 @@
+.page-container {
+  padding: 24px;
+  max-width: 720px;
+}
+
+.settings-card {
+  margin-bottom: 24px;
+  padding: 24px;
+}
+
+.settings-section-header {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.section-icon {
+  font-size: 32px;
+  width: 32px;
+  height: 32px;
+  color: var(--mat-sys-primary, #1976d2);
+  margin-top: 2px;
+  flex-shrink: 0;
+}
+
+.danger-icon {
+  color: #A31C2A;
+}
+
+.section-title {
+  margin: 0 0 4px;
+  font-size: 1.1rem;
+  font-weight: 600;
+}
+
+.section-desc {
+  margin: 0;
+  color: rgba(0, 0, 0, 0.6);
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+
+.balance-field {
+  width: 100%;
+  max-width: 320px;
+}
+
+.locked-message {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: rgba(0, 0, 0, 0.5);
+  font-size: 0.85rem;
+  margin: -8px 0 16px;
+}
+
+.lock-icon {
+  font-size: 16px;
+  width: 16px;
+  height: 16px;
+}
+
+.form-actions {
+  margin-top: 16px;
+}
+
+.divider {
+  margin-bottom: 20px;
+}
+
+.danger-card {
+  border: 1px solid rgba(163, 28, 42, 0.3);
+}
+
+.danger-action {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.danger-action-info {
+  flex: 1;
+
+  strong {
+    display: block;
+    margin-bottom: 4px;
+    font-size: 0.95rem;
+  }
+
+  p {
+    margin: 0;
+    color: rgba(0, 0, 0, 0.6);
+    font-size: 0.85rem;
+  }
+}

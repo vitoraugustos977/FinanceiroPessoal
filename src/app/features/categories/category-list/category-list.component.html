@@ -1,0 +1,79 @@
+<div class="page-container">
+  <h1 class="page-title">Categorias</h1>
+
+  <!-- Formulário de nova categoria -->
+  <div class="card add-card">
+    <h3 class="section-title">Nova Categoria</h3>
+    <div class="add-form">
+      <mat-form-field appearance="outline" class="name-field">
+        <mat-label>Nome</mat-label>
+        <input matInput [(ngModel)]="newName" maxlength="50" placeholder="Ex: Academia" />
+      </mat-form-field>
+
+      <div class="color-wrap">
+        <label class="color-label">Cor</label>
+        <input type="color" [(ngModel)]="newColor" class="color-input" />
+      </div>
+
+      <button mat-flat-button color="primary" (click)="addCategory()">
+        <mat-icon>add</mat-icon>
+        Adicionar
+      </button>
+    </div>
+    @if (error && !editingId) {
+      <p class="error-msg">{{ error }}</p>
+    }
+  </div>
+
+  <!-- Lista de categorias -->
+  <div class="card categories-card">
+    <h3 class="section-title">Categorias ({{ categoryService.categories().length }})</h3>
+
+    @if (categoryService.categories().length === 0) {
+      <p class="text-muted">Nenhuma categoria cadastrada.</p>
+    }
+
+    <div class="categories-grid">
+      @for (cat of categoryService.categories(); track cat.id) {
+        <div class="cat-item card">
+          @if (editingId === cat.id) {
+            <div class="edit-form">
+              <mat-form-field appearance="outline" class="edit-name-field">
+                <mat-label>Nome</mat-label>
+                <input matInput [(ngModel)]="editName" maxlength="50" />
+              </mat-form-field>
+              <div class="color-wrap">
+                <label class="color-label">Cor</label>
+                <input type="color" [(ngModel)]="editColor" class="color-input" />
+              </div>
+              @if (error && editingId === cat.id) {
+                <p class="error-msg">{{ error }}</p>
+              }
+              <div class="edit-actions">
+                <button mat-icon-button color="primary" matTooltip="Salvar" (click)="saveEdit()">
+                  <mat-icon>check</mat-icon>
+                </button>
+                <button mat-icon-button matTooltip="Cancelar" (click)="cancelEdit()">
+                  <mat-icon>close</mat-icon>
+                </button>
+              </div>
+            </div>
+          } @else {
+            <div class="cat-display">
+              <span class="cat-dot" [style.background]="cat.color"></span>
+              <span class="cat-name">{{ cat.name }}</span>
+              <div class="cat-actions">
+                <button mat-icon-button matTooltip="Editar" (click)="startEdit(cat)">
+                  <mat-icon>edit</mat-icon>
+                </button>
+                <button mat-icon-button color="warn" matTooltip="Excluir" (click)="confirmDelete(cat)">
+                  <mat-icon>delete</mat-icon>
+                </button>
+              </div>
+            </div>
+          }
+        </div>
+      }
+    </div>
+  </div>
+</div>

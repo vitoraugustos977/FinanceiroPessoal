@@ -1,0 +1,199 @@
+<div class="page-container">
+  <h1 class="page-title">Dashboard</h1>
+
+  <!-- Cards de resumo -->
+  <div class="summary-cards">
+    <div class="card summary-card balance-card">
+      <div class="summary-label">
+        <mat-icon>account_balance_wallet</mat-icon>
+        Saldo Total
+      </div>
+      <div class="summary-value" [class.text-success]="balance() >= 0" [class.text-danger]="balance() < 0">
+        {{ balance() | currency:'BRL':'symbol':'1.2-2':'pt-BR' }}
+      </div>
+      @if (monthVariations().balance; as v) {
+        <div class="variation-indicator" [class.variation-good]="v.isGood" [class.variation-bad]="!v.isGood && v.direction !== 'flat'" [class.variation-flat]="v.direction === 'flat'">
+          {{ v.direction === 'up' ? '↑' : v.direction === 'down' ? '↓' : '→' }}
+          @if (v.direction !== 'flat') { {{ v.pct | number:'1.0-1' }}% } @else { sem variação }
+          em relação a {{ monthVariations().prevMonthName }}
+        </div>
+      }
+    </div>
+
+    <div class="card summary-card receita-card">
+      <div class="summary-label">
+        <mat-icon>trending_up</mat-icon>
+        Receitas do Mês ({{ currentMonthName() }})
+      </div>
+      <div class="summary-value text-success">
+        {{ currentMonthReceitas() | currency:'BRL':'symbol':'1.2-2':'pt-BR' }}
+      </div>
+      @if (monthVariations().receitas; as v) {
+        <div class="variation-indicator" [class.variation-good]="v.isGood" [class.variation-bad]="!v.isGood && v.direction !== 'flat'" [class.variation-flat]="v.direction === 'flat'">
+          {{ v.direction === 'up' ? '↑' : v.direction === 'down' ? '↓' : '→' }}
+          @if (v.direction !== 'flat') { {{ v.pct | number:'1.0-1' }}% } @else { sem variação }
+          em relação a {{ monthVariations().prevMonthName }}
+        </div>
+      }
+    </div>
+
+    <div class="card summary-card despesa-card">
+      <div class="summary-label">
+        <mat-icon>trending_down</mat-icon>
+        Despesas do Mês ({{ currentMonthName() }})
+      </div>
+      <div class="summary-value text-danger">
+        {{ currentMonthDespesas() | currency:'BRL':'symbol':'1.2-2':'pt-BR' }}
+      </div>
+      @if (monthVariations().despesas; as v) {
+        <div class="variation-indicator" [class.variation-good]="v.isGood" [class.variation-bad]="!v.isGood && v.direction !== 'flat'" [class.variation-flat]="v.direction === 'flat'">
+          {{ v.direction === 'up' ? '↑' : v.direction === 'down' ? '↓' : '→' }}
+          @if (v.direction !== 'flat') { {{ v.pct | number:'1.0-1' }}% } @else { sem variação }
+          em relação a {{ monthVariations().prevMonthName }}
+        </div>
+      }
+    </div>
+
+    <div class="card summary-card objetivo-card">
+      <div class="summary-label">
+        <mat-icon>flag</mat-icon>
+        Objetivos do Mês ({{ currentMonthName() }})
+      </div>
+      <div class="summary-value text-objetivo">
+        {{ currentMonthObjetivos() | currency:'BRL':'symbol':'1.2-2':'pt-BR' }}
+      </div>
+      @if (monthVariations().objetivos; as v) {
+        <div class="variation-indicator" [class.variation-good]="v.isGood" [class.variation-bad]="!v.isGood && v.direction !== 'flat'" [class.variation-flat]="v.direction === 'flat'">
+          {{ v.direction === 'up' ? '↑' : v.direction === 'down' ? '↓' : '→' }}
+          @if (v.direction !== 'flat') { {{ v.pct | number:'1.0-1' }}% } @else { sem variação }
+          em relação a {{ monthVariations().prevMonthName }}
+        </div>
+      }
+    </div>
+  </div>
+
+  <!-- Gráficos -->
+  <div class="charts-row">
+    <!-- Receitas vs Despesas por mês -->
+    <div class="card chart-card">
+      <h3 class="chart-title">Receitas vs Despesas — Últimos 6 Meses</h3>
+      <div class="chart-container">
+        <canvas baseChart
+          [data]="barChartData()"
+          [options]="barChartOptions"
+          type="bar">
+        </canvas>
+      </div>
+    </div>
+
+    <!-- Gastos por categoria -->
+    <div class="card chart-card">
+      <h3 class="chart-title">Gastos por Categoria — Mês Atual</h3>
+      @if (hasDoughnutData()) {
+        <div class="chart-container">
+          <canvas baseChart
+            [data]="doughnutChartData()"
+            [options]="doughnutChartOptions"
+            type="doughnut">
+          </canvas>
+        </div>
+      } @else {
+        <div class="empty-chart">
+          <mat-icon>donut_large</mat-icon>
+          <p>Sem despesas neste mês</p>
+        </div>
+      }
+    </div>
+  </div>
+
+  <!-- Tendência de gastos -->
+  <div class="card chart-card chart-card--full">
+    <h3 class="chart-title">Tendência de Receitas e Despesas — Últimos 12 Meses</h3>
+    <div class="chart-container">
+      <canvas baseChart
+        [data]="lineChartData()"
+        [options]="lineChartOptions"
+        type="line">
+      </canvas>
+    </div>
+  </div>
+
+  <!-- Evolução do Saldo + Composição de Receitas -->
+  <div class="charts-row" style="margin-top:16px">
+    <div class="card chart-card">
+      <h3 class="chart-title">Evolução do Saldo — Últimos 12 Meses</h3>
+      <div class="chart-container">
+        <canvas baseChart
+          [data]="balanceEvolutionData()"
+          [options]="balanceEvolutionOptions"
+          type="line">
+        </canvas>
+      </div>
+    </div>
+
+    <div class="card chart-card">
+      <h3 class="chart-title">Composição de Receitas — Mês Atual</h3>
+      @if (hasReceiptsDoughnutData()) {
+        <div class="chart-container">
+          <canvas baseChart
+            [data]="receiptsDoughnutData()"
+            [options]="doughnutChartOptions"
+            type="doughnut">
+          </canvas>
+        </div>
+      } @else {
+        <div class="empty-chart">
+          <mat-icon>pie_chart</mat-icon>
+          <p>Sem receitas neste mês</p>
+        </div>
+      }
+    </div>
+  </div>
+
+  <!-- Meus Objetivos -->
+  <div class="card objectives-section">
+    <div class="objectives-header">
+      <h3 class="chart-title" style="margin:0">Meus Objetivos</h3>
+      <a mat-stroked-button routerLink="/objectives">
+        <mat-icon>flag</mat-icon>
+        Gerenciar
+      </a>
+    </div>
+
+    @if (objectivesProgress().length === 0) {
+      <div class="empty-chart">
+        <mat-icon>flag</mat-icon>
+        <p>Nenhum objetivo cadastrado. <a routerLink="/objectives">Criar objetivo</a></p>
+      </div>
+    } @else {
+      <div class="objectives-grid">
+        @for (op of objectivesProgress(); track op.objective.id) {
+          <div class="objective-card">
+            <div class="objective-top">
+              <span class="obj-dot" [style.background]="op.objective.color"></span>
+              <span class="obj-name">{{ op.objective.name }}</span>
+              @if (op.isComplete) {
+                <span class="complete-badge">
+                  <mat-icon>check_circle</mat-icon>
+                  Concluído
+                </span>
+              }
+            </div>
+            <mat-progress-bar
+              mode="determinate"
+              [value]="op.percentage"
+              [color]="op.isComplete ? 'accent' : 'primary'"
+              class="obj-progress-bar">
+            </mat-progress-bar>
+            <div class="objective-values">
+              <span class="accumulated">{{ op.accumulated | currency:'BRL':'symbol':'1.2-2':'pt-BR' }}</span>
+              <span class="separator">/</span>
+              <span class="target">{{ op.objective.targetValue | currency:'BRL':'symbol':'1.2-2':'pt-BR' }}</span>
+              <span class="percentage">({{ op.percentage | number:'1.0-1' }}%)</span>
+            </div>
+          </div>
+        }
+      </div>
+    }
+  </div>
+</div>

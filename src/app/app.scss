@@ -1,0 +1,80 @@
+:host {
+  display: block;
+  height: 100vh;
+  overflow: hidden;
+}
+
+.app-container {
+  height: 100%;
+  overflow: hidden;
+}
+
+.sidenav {
+  width: 220px;
+  background: #4A4820;
+  color: white;
+  overflow-x: hidden;
+
+  .sidenav-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 24px 16px 16px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+    margin-bottom: 8px;
+
+    .logo-icon {
+      font-size: 32px;
+      width: 32px;
+      height: 32px;
+      color: #DDDDB8;
+    }
+
+    .logo-text {
+      font-size: 14px;
+      line-height: 1.4;
+      color: rgba(255, 255, 255, 0.85);
+    }
+  }
+
+  ::ng-deep .mat-mdc-nav-list {
+    .mat-mdc-list-item {
+      border-radius: 8px;
+      margin: 2px 8px;
+      width: calc(100% - 16px);
+
+      .mdc-list-item__content,
+      .mdc-list-item__primary-text,
+      span {
+        color: rgba(255, 255, 255, 0.85) !important;
+      }
+
+      .mat-icon {
+        color: rgba(255, 255, 255, 0.75) !important;
+      }
+
+      &:hover {
+        background: rgba(255, 255, 255, 0.1);
+      }
+    }
+
+    .active-link {
+      background: rgba(221, 221, 184, 0.2) !important;
+
+      .mdc-list-item__primary-text,
+      span {
+        color: white !important;
+      }
+
+      .mat-icon {
+        color: #DDDDB8 !important;
+      }
+    }
+  }
+}
+
+.main-content {
+  background: #F5F2E7;
+  overflow-y: auto;
+  overflow-x: hidden;
+}

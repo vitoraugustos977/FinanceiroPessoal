@@ -1,0 +1,94 @@
+<div class="page-container">
+  <h1 class="page-title">Objetivos</h1>
+
+  <!-- Formulário de novo objetivo -->
+  <div class="card add-card">
+    <h3 class="section-title">Novo Objetivo</h3>
+    <div class="add-form">
+      <mat-form-field appearance="outline" class="name-field">
+        <mat-label>Nome</mat-label>
+        <input matInput [(ngModel)]="newName" maxlength="50" placeholder="Ex: Reserva de Emergência" />
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="target-field">
+        <mat-label>Meta (R$)</mat-label>
+        <input matInput type="number" step="0.01" min="0.01" [(ngModel)]="newTarget" placeholder="0,00" />
+      </mat-form-field>
+
+      <div class="color-wrap">
+        <label class="color-label">Cor</label>
+        <input type="color" [(ngModel)]="newColor" class="color-input" />
+      </div>
+
+      <button mat-flat-button color="primary" (click)="addObjective()">
+        <mat-icon>add</mat-icon>
+        Adicionar
+      </button>
+    </div>
+    @if (error && !editingId) {
+      <p class="error-msg">{{ error }}</p>
+    }
+  </div>
+
+  <!-- Lista de objetivos -->
+  <div class="card objectives-card">
+    <h3 class="section-title">Objetivos ({{ objectiveService.objectives().length }})</h3>
+
+    @if (objectiveService.objectives().length === 0) {
+      <div class="empty-state">
+        <mat-icon>flag</mat-icon>
+        <p>Nenhum objetivo cadastrado. Crie seu primeiro objetivo acima!</p>
+      </div>
+    }
+
+    <div class="objectives-grid">
+      @for (obj of objectiveService.objectives(); track obj.id) {
+        <div class="obj-item card">
+          @if (editingId === obj.id) {
+            <div class="edit-form">
+              <mat-form-field appearance="outline" class="edit-name-field">
+                <mat-label>Nome</mat-label>
+                <input matInput [(ngModel)]="editName" maxlength="50" />
+              </mat-form-field>
+              <mat-form-field appearance="outline" class="edit-name-field">
+                <mat-label>Meta (R$)</mat-label>
+                <input matInput type="number" step="0.01" min="0.01" [(ngModel)]="editTarget" />
+              </mat-form-field>
+              <div class="color-wrap">
+                <label class="color-label">Cor</label>
+                <input type="color" [(ngModel)]="editColor" class="color-input" />
+              </div>
+              @if (error && editingId === obj.id) {
+                <p class="error-msg">{{ error }}</p>
+              }
+              <div class="edit-actions">
+                <button mat-icon-button color="primary" matTooltip="Salvar" (click)="saveEdit()">
+                  <mat-icon>check</mat-icon>
+                </button>
+                <button mat-icon-button matTooltip="Cancelar" (click)="cancelEdit()">
+                  <mat-icon>close</mat-icon>
+                </button>
+              </div>
+            </div>
+          } @else {
+            <div class="obj-display">
+              <span class="obj-dot" [style.background]="obj.color"></span>
+              <div class="obj-info">
+                <span class="obj-name">{{ obj.name }}</span>
+                <span class="obj-target">Meta: {{ obj.targetValue | currency:'BRL':'symbol':'1.2-2':'pt-BR' }}</span>
+              </div>
+              <div class="obj-actions">
+                <button mat-icon-button matTooltip="Editar" (click)="startEdit(obj)">
+                  <mat-icon>edit</mat-icon>
+                </button>
+                <button mat-icon-button color="warn" matTooltip="Excluir" (click)="confirmDelete(obj)">
+                  <mat-icon>delete</mat-icon>
+                </button>
+              </div>
+            </div>
+          }
+        </div>
+      }
+    </div>
+  </div>
+</div>
